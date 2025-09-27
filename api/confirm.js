@@ -57,7 +57,7 @@ const sendConfirmationEmail = async (to, name) => {
               margin-bottom: 20px;
             }
             .event-details {
-              background-color: #f8f9fa;
+              background-color: #000000;
               border-left: 4px solid #FFD700;
               padding: 20px;
               margin: 20px 0;
