@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 const Form = ({ onConfirm }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -10,7 +11,7 @@ const Form = ({ onConfirm }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !company) {
+    if (!name || !email || !company) {
       setError('Por favor, preencha todos os campos.');
       return;
     }
@@ -22,7 +23,7 @@ const Form = ({ onConfirm }) => {
       const response = await fetch('/api/confirm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, company, confirmed }),
+        body: JSON.stringify({ name, email, company, confirmed }),
       });
 
       const data = await response.json();
@@ -57,6 +58,17 @@ const Form = ({ onConfirm }) => {
             onChange={(e) => setName(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
             placeholder="Seu nome completo"
+            whileFocus={{ scale: 1.02 }}
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <motion.input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            placeholder="Seu melhor e-mail"
             whileFocus={{ scale: 1.02 }}
           />
         </div>

@@ -65,8 +65,11 @@ const HomePage = () => {
               <p className="text-gray-700 mb-4">
                 Olá, <strong>{confirmed.name}</strong>! Sua presença foi confirmada.
               </p>
-              <p className="text-sm text-gray-500">
-                Um e-mail de confirmação foi enviado para seu endereço.
+              <p className="text-sm text-gray-500 mb-2">
+                Um e-mail de confirmação foi enviado para:
+              </p>
+              <p className="text-sm font-medium text-blue-600 mb-4">
+                {confirmed.email}
               </p>
             </motion.div>
           ) : (
