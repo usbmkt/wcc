@@ -42,7 +42,7 @@ const Form = ({ onConfirm }) => {
 
   return (
     <motion.div
-      class="bg-black bg-opacity-50 p-6 rounded-lg text-white"
+      className="bg-black bg-opacity-50 p-6 rounded-lg text-white"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -56,7 +56,7 @@ const Form = ({ onConfirm }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
             placeholder="Seu nome completo"
             whileFocus={{ scale: 1.02 }}
           />
@@ -67,7 +67,7 @@ const Form = ({ onConfirm }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
             placeholder="Seu melhor e-mail"
             whileFocus={{ scale: 1.02 }}
           />
@@ -78,7 +78,7 @@ const Form = ({ onConfirm }) => {
             type="text"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
             placeholder="Nome da sua empresa"
             whileFocus={{ scale: 1.02 }}
           />
@@ -117,4 +117,3 @@ const Form = ({ onConfirm }) => {
 };
 
 export default Form;
-
