@@ -11,7 +11,7 @@ const sendConfirmationEmail = async (to, name) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     await resend.emails.send({
-      from: 'contatousbabc@gmail.com', // Use este domínio padrão até configurar seu domínio verificado
+      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
       to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
