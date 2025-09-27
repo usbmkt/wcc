@@ -40,7 +40,7 @@ const HomePage = () => {
           variants={itemVariants}
         >
           <div className="bg-white bg-opacity-90 p-3 rounded">
-            <h1 className="text-2xl font-bold text-gray-800">WELL IMÓVEIS</h1>
+              background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./assets/logo-well.png') no-repeat center center fixed;
           </div>
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
           <div className="mt-6 flex space-x-4">
