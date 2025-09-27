@@ -42,7 +42,7 @@ const Form = ({ onConfirm }) => {
 
   return (
     <motion.div
-      className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md"
+      class="bg-black bg-opacity-50 p-6 rounded-lg text-white"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
