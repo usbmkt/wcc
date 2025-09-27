@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: url('https://i.imgur.com/5QZ3h2K.jpg') no-repeat center center fixed;
+  background: url('/background.jpg') no-repeat center center fixed;
   background-size: cover;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
