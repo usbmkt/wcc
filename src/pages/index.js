@@ -40,7 +40,6 @@ const HomePage = () => {
           className="w-full md:w-1/4 flex flex-col items-start space-y-4"
           variants={itemVariants}
         >
-          <div className="bg-white bg-opacity-90 p-3 rounded">
             <img 
               src={logoWell} 
               alt="Well Logo" 
