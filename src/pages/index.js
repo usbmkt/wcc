@@ -4,6 +4,7 @@ import { FaInstagram, FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
 import QRCode from 'qrcode.react';
 import { motion } from 'framer-motion';
 import logoWell from '../assets/logo-well.png';
+import swissImg from '../assets/swiss.png';
 
 const HomePage = () => {
   const [confirmed, setConfirmed] = useState(null);
@@ -43,10 +44,10 @@ const HomePage = () => {
           <img 
             src={logoWell} 
             alt="Well Logo" 
-            className="h-12 w-auto object-contain"
+            className="h-24 w-auto object-contain"
           />
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
-          <div className="mt-10 flex space-x-10">
+          <div className="mt-6 flex space-x-4">
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
               <FaInstagram className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
             </a>
@@ -69,19 +70,19 @@ const HomePage = () => {
         >
           {confirmed ? (
             <motion.div
-              className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full"
+              className="bg-black bg-opacity-50 p-6 rounded-lg shadow-lg text-center max-w-md w-full"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <h2 className="text-2xl font-bold text-green-600 mb-4">✅ Confirmação Recebida!</h2>
-              <p className="text-gray-700 mb-4">
+              <h2 className="text-2xl font-bold text-green-400 mb-4">✅ Confirmação Recebida!</h2>
+              <p className="text-white mb-4">
                 Olá, <strong>{confirmed.name}</strong>! Sua presença foi confirmada.
               </p>
-              <p className="text-sm text-gray-500 mb-2">
+              <p className="text-sm text-gray-300 mb-2">
                 Um e-mail de confirmação foi enviado para:
               </p>
-              <p className="text-sm font-medium text-blue-600 mb-4">
+              <p className="text-sm font-medium text-blue-400 mb-4">
                 {confirmed.email}
               </p>
               <button
@@ -122,8 +123,12 @@ const HomePage = () => {
           >
             <h1 className="text-3xl md:text-4xl font-script mb-4">Open House</h1>
             <div className="bg-white bg-opacity-20 p-4 rounded mb-4">
-              <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center">
-                <h2 className="text-2xl font-bold text-white">Swiss Park</h2>
+              <div className="h-32 rounded flex items-center justify-center overflow-hidden">
+                <img 
+                  src={swissImg} 
+                  alt="Swiss Park" 
+                  className="w-full h-full object-cover rounded"
+                />
               </div>
             </div>
             <div className="border-t border-white pt-4">
