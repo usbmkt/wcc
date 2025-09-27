@@ -39,13 +39,23 @@ const HomePage = () => {
           className="w-full md:w-1/4 flex flex-col items-start space-y-4"
           variants={itemVariants}
         >
-          <img src="/logo-well.png" alt="Well Imóveis" className="h-16 md:h-20" />
+          <div className="bg-white bg-opacity-90 p-3 rounded">
+            <h1 className="text-2xl font-bold text-gray-800">WELL IMÓVEIS</h1>
+          </div>
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
           <div className="mt-6 flex space-x-4">
-            <FaInstagram className="text-white text-xl cursor-pointer" />
-            <FaFacebook className="text-white text-xl cursor-pointer" />
-            <FaTwitter className="text-white text-xl cursor-pointer" />
-            <FaWhatsapp className="text-white text-xl cursor-pointer" />
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <FaInstagram className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <FaFacebook className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+              <FaTwitter className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
+            </a>
+            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+              <FaWhatsapp className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
+            </a>
           </div>
         </motion.div>
 
@@ -71,6 +81,12 @@ const HomePage = () => {
               <p className="text-sm font-medium text-blue-600 mb-4">
                 {confirmed.email}
               </p>
+              <button
+                onClick={() => setConfirmed(null)}
+                className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
+              >
+                Fazer Nova Confirmação
+              </button>
             </motion.div>
           ) : (
             <Form onConfirm={handleConfirm} />
@@ -103,8 +119,9 @@ const HomePage = () => {
           >
             <h1 className="text-3xl md:text-4xl font-script mb-4">Open House</h1>
             <div className="bg-white bg-opacity-20 p-4 rounded mb-4">
-              <img src="https://i.imgur.com/5QZ3h2K.jpg" alt="Swiss Park" className="w-full h-32 object-cover rounded" />
-              <h2 className="text-xl font-bold mt-2">Swiss Park</h2>
+              <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center">
+                <h2 className="text-2xl font-bold text-white">Swiss Park</h2>
+              </div>
             </div>
             <div className="border-t border-white pt-4">
               <p className="text-xl font-bold">6 de novembro das 17 às 21h</p>
@@ -134,4 +151,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
