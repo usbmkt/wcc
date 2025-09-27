@@ -3,6 +3,7 @@ import Form from '../components/Form';
 import { FaInstagram, FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
 import QRCode from 'qrcode.react';
 import { motion } from 'framer-motion';
+import logoWell from '../assets/logo-well.png';
 
 const HomePage = () => {
   const [confirmed, setConfirmed] = useState(null);
@@ -40,7 +41,11 @@ const HomePage = () => {
           variants={itemVariants}
         >
           <div className="bg-white bg-opacity-90 p-3 rounded">
-            url('./assets/logo-well.png') no-repeat center center fixed;
+            <img 
+              src={logoWell} 
+              alt="Well Logo" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
           <div className="mt-6 flex space-x-4">
