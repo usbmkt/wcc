@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 body {
-  background: url('/background.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1973&q=80') no-repeat center center fixed;
   background-size: cover;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
   margin: 0;
   padding: 0;
 }
