@@ -4,9 +4,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Função para enviar e-mail para o convidado (HTML estilizado)
 const sendConfirmationEmail = async (to, name) => {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('Chave de API do Resend não configurada');
+    return;
+  }
+
   try {
     await resend.emails.send({
-      from: 'onboarding@resend.dev', // Use seu domínio ou o sandbox
+      from: 'onboarding@resend.dev',
       to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
@@ -138,6 +143,11 @@ const sendConfirmationEmail = async (to, name) => {
 
 // Função para enviar alerta para o organizador
 const sendAlertEmail = async (name, email, company, confirmed) => {
+  if (!process.env.RESEND_API_KEY) {
+    console.error('Chave de API do Resend não configurada');
+    return;
+  }
+
   try {
     await resend.emails.send({
       from: 'onboarding@resend.dev',
