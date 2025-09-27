@@ -96,20 +96,7 @@ const HomePage = () => {
             <Form onConfirm={handleConfirm} />
           )}
 
-          {/* QR Code para mobile */}
-          <motion.div
-            className="mt-6 md:hidden bg-white p-4 rounded-lg shadow-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <p className="text-center text-gray-700 mb-2">Escaneie o QR Code para acessar novamente:</p>
-            <div className="flex justify-center">
-              <QRCode value={window.location.href} size={128} />
-            </div>
-          </motion.div>
-        </motion.div>
-
+         
         {/* EVENTO INFO E QR CODE PARA DESKTOP */}
         <motion.div
           className="w-full md:w-1/4 flex flex-col gap-6"
