@@ -116,7 +116,7 @@ const HomePage = () => {
                   className="w-full h-full object-cover rounded"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                  <h2 className="text-2xl font-bold text-white">Swiss Park</h2>
+                  <h2 className="text-2xl font-bold text-white"> </h2>
                 </div>
               </div>
             </div>
