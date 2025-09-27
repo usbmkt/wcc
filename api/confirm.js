@@ -35,7 +35,8 @@ const sendConfirmationEmail = async (to, name) => {
               box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             .header {
-              background: linear-gradient(135deg, #FFD700, #FFA500);
+              className="bg-black bg-opacity-50 p-6 rounded-lg shadow-lg"
+
               padding: 30px;
               text-align: center;
               color: white;
