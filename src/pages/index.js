@@ -40,12 +40,11 @@ const HomePage = () => {
           className="w-full md:w-1/4 flex flex-col items-start space-y-4"
           variants={itemVariants}
         >
-            <img 
-              src={logoWell} 
-              alt="Well Logo" 
-              className="h-12 w-auto object-contain"
-            />
-          </div>
+          <img 
+            src={logoWell} 
+            alt="Well Logo" 
+            className="h-12 w-auto object-contain"
+          />
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
           <div className="mt-6 flex space-x-4">
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
