@@ -46,7 +46,7 @@ const HomePage = () => {
             className="h-12 w-auto object-contain"
           />
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
-          <div className="mt-6 flex space-x-4">
+          <div className="mt-10 flex space-x-10">
             <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
               <FaInstagram className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
             </a>
