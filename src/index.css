@@ -1,14 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 body {
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1973&q=80') no-repeat center center fixed;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('public/background.jpg') no-repeat center center fixed;
   background-size: cover;
   margin: 0;
   padding: 0;
 }
-
 .overlay {
   background: rgba(0,0,0,0.7);
   position: absolute;
@@ -18,7 +16,6 @@ body {
   height: 100%;
   z-index: 0;
 }
-
 .container {
   position: relative;
   z-index: 1;
