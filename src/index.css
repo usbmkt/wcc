@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 body {
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('public/background.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/background.jpg') no-repeat center center fixed;
   background-size: cover;
   margin: 0;
   padding: 0;
