@@ -3,6 +3,7 @@ import Form from '../components/Form';
 import { FaInstagram, FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import logoWell from '../assets/logo-well.png';
+import swissImage from '../assets/swiss.png';
 
 const HomePage = () => {
   const [confirmed, setConfirmed] = useState(null);
@@ -108,8 +109,15 @@ const HomePage = () => {
           >
             <h1 className="text-3xl md:text-4xl font-script mb-4">Open House</h1>
             <div className="bg-white bg-opacity-20 p-4 rounded mb-4">
-              <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center">
-                <h2 className="text-2xl font-bold text-white">Swiss Park</h2>
+              <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 rounded flex items-center justify-center relative overflow-hidden">
+                <img 
+                  src={swissImage} 
+                  alt="Swiss Park" 
+                  className="w-full h-full object-cover rounded"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <h2 className="text-2xl font-bold text-white"> </h2>
+                </div>
               </div>
             </div>
             <div className="border-t border-white pt-4">
