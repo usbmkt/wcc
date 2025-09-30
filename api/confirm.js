@@ -1,250 +1,268 @@
-import { Resend } from 'resend';
+// pages/api/confirm.js (exemplo para API Routes do Pages Router)
+// Lembre-se de instalar: npm install @sendgrid/mail
+import sgMail from '@sendgrid/mail';
+
+// Certifique-se de definir a chave de API do SendGrid
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+} else {
+  console.warn('SENDGRID_API_KEY não está configurada.');
+}
 
 // Função para enviar e-mail para o convidado (HTML estilizado)
 const sendConfirmationEmail = async (to, name) => {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY não configurada - e-mail de confirmação não será enviado');
+  if (!process.env.SENDGRID_API_KEY) {
+    console.warn('SENDGRID_API_KEY não configurada - e-mail de confirmação não será enviado');
     return false;
   }
 
-  try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    
-    await resend.emails.send({
-      from: 'onboarding@resend.dev', // Para produção, use um domínio verificado.
-      to,
-      subject: 'Confirmação de Presença - Open House Swiss Park',
-      html: `
-        <!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Confirmação de Presença - Open House Swiss Park</title>
-          <style>
-            body {
-              font-family: 'Arial', sans-serif;
-              margin: 0;
-              padding: 0;
-              background-color: #f4f4f4;
-            }
-            .container {
-              max-width: 600px;
-              margin: 0 auto;
-              background-color: #ffffff;
-              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-            .header {
-              background-color: #1a1a1a;
-              padding: 30px;
-              text-align: center;
-              color: white;
-            }
-            .header h1 {
-              margin: 0;
-              font-size: 28px;
-              font-weight: bold;
-            }
-            .content {
-              padding: 40px 30px;
-              line-height: 1.6;
-              color: #333;
-            }
-            .greeting {
-              font-size: 20px;
-              color: #2c3e50;
-              margin-bottom: 20px;
-            }
-            .event-details {
-              background-color: #f9f9f9;
-              border-left: 4px solid #FFD700;
-              padding: 20px;
-              margin: 20px 0;
-            }
-            .event-details h3 {
-              color: #2c3e50;
-              margin-top: 0;
-            }
-            .footer {
-              background-color: #2c3e50;
-              color: white;
-              padding: 20px;
-              text-align: center;
-              font-size: 14px;
-            }
-            .logo {
-              font-size: 24px;
-              font-weight: bold;
-              margin-bottom: 10px;
-            }
-            .confirmation-badge {
-              background-color: #28a745;
-              color: white;
-              padding: 10px 20px;
-              border-radius: 25px;
-              display: inline-block;
-              margin: 20px 0;
-              font-weight: bold;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <div class="logo">WELL IMÓVEIS</div>
-              <h1>Open House Swiss Park</h1>
-            </div>
-            
-            <div class="content">
-              <div class="greeting">Olá, ${name}!</div>
-              
-              <div class="confirmation-badge">
-                ✅ Presença Confirmada com Sucesso!
-              </div>
-              
-              <p>Ficamos muito felizes em confirmar sua presença no nosso evento exclusivo <strong>Open House Swiss Park</strong>.</p>
-              
-              <div class="event-details">
-                <h3>📅 Detalhes do Evento</h3>
-                <p><strong>Data:</strong> 6 de novembro de 2024</p>
-                <p><strong>Horário:</strong> Das 17h às 21h</p>
-                <p><strong>Local:</strong> Swiss Park</p>
-                <p><strong>Importante:</strong> Este convite é individual e intransferível</p>
-              </div>
-              
-              <p>Durante o evento, você terá a oportunidade de:</p>
-              <ul>
-                <li>Conhecer as unidades disponíveis</li>
-                <li>Conversar com nossos especialistas</li>
-                <li>Esclarecer todas as suas dúvidas</li>
-                <li>Aproveitar condições especiais</li>
-              </ul>
-              
-              <p>Agradecemos sua confirmação e esperamos vê-lo(a) em breve!</p>
-              
-              <p>Atenciosamente,<br>
-              <strong>Equipe Well Imóveis</strong></p>
-            </div>
-            
-            <div class="footer">
-              <p><strong>WELL IMÓVEIS - NEGÓCIOS IMOBILIÁRIOS</strong></p>
-              <p>Em caso de dúvidas, entre em contato conosco.</p>
-            </div>
+  const msg = {
+    to, // Endereço de e-mail do destinatário
+    from: process.env.SENDGRID_FROM_EMAIL || 'your_verified_sender@yourdomain.com', // O remetente DEVE ser um endereço verificado no SendGrid
+    subject: 'Confirmação de Presença - Open House Swiss Park',
+    html: `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirmação de Presença - Open House Swiss Park</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          }
+          .header {
+            background-color: #1a1a1a;
+            padding: 30px;
+            text-align: center;
+            color: white;
+          }
+          .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+          }
+          .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+            color: #333;
+          }
+          .greeting {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+          }
+          .event-details {
+            background-color: #f9f9f9;
+            border-left: 4px solid #FFD700;
+            padding: 20px;
+            margin: 20px 0;
+          }
+          .event-details h3 {
+            color: #2c3e50;
+            margin-top: 0;
+          }
+          .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+          }
+          .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+          .confirmation-badge {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">WELL IMÓVEIS</div>
+            <h1>Open House Swiss Park</h1>
           </div>
-        </body>
-        </html>
-      `,
-    });
+          
+          <div class="content">
+            <div class="greeting">Olá, ${name}!</div>
+            
+            <div class="confirmation-badge">
+              ✅ Presença Confirmada com Sucesso!
+            </div>
+            
+            <p>Ficamos muito felizes em confirmar sua presença no nosso evento exclusivo <strong>Open House Swiss Park</strong>.</p>
+            
+            <div class="event-details">
+              <h3>📅 Detalhes do Evento</h3>
+              <p><strong>Data:</strong> 6 de novembro de 2024</p>
+              <p><strong>Horário:</strong> Das 17h às 21h</p>
+              <p><strong>Local:</strong> Swiss Park</p>
+              <p><strong>Importante:</strong> Este convite é individual e intransferível</p>
+            </div>
+            
+            <p>Durante o evento, você terá a oportunidade de:</p>
+            <ul>
+              <li>Conhecer as unidades disponíveis</li>
+              <li>Conversar com nossos especialistas</li>
+              <li>Esclarecer todas as suas dúvidas</li>
+              <li>Aproveitar condições especiais</li>
+            </ul>
+            
+            <p>Agradecemos sua confirmação e esperamos vê-lo(a) em breve!</p>
+            
+            <p>Atenciosamente,<br>
+            <strong>Equipe Well Imóveis</strong></p>
+          </div>
+          
+          <div class="footer">
+            <p><strong>WELL IMÓVEIS - NEGÓCIOS IMOBILIÁRIOS</strong></p>
+            <p>Em caso de dúvidas, entre em contato conosco.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
     console.log('E-mail de confirmação enviado para:', to);
     return true;
   } catch (error) {
-    console.error('Erro ao enviar e-mail de confirmação:', error);
+    console.error('Erro ao enviar e-mail de confirmação via SendGrid:', error);
+    // O SendGrid pode retornar detalhes específicos no error.response
+    if (error.response) {
+      console.error('Body:', error.response.body);
+      console.error('Headers:', error.response.headers);
+    }
     return false;
   }
 };
 
 // Função para enviar alerta para o organizador
 const sendAlertEmail = async (name, email, company, confirmed) => {
-  if (!process.env.RESEND_API_KEY || !process.env.ADMIN_EMAIL) {
-    console.warn('RESEND_API_KEY ou ADMIN_EMAIL não configurados - alerta não será enviado');
+  if (!process.env.SENDGRID_API_KEY || !process.env.ADMIN_EMAIL) {
+    console.warn('SENDGRID_API_KEY ou ADMIN_EMAIL não configurados - alerta não será enviado');
     return false;
   }
 
-  try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    
-    await resend.emails.send({
-      from: 'onboarding@resend.dev', // Para produção, use um domínio verificado.
-      to: process.env.ADMIN_EMAIL,
-      subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
-      html: `
-        <!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-          <meta charset="UTF-8">
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 20px;
-              background-color: #f4f4f4;
-            }
-            .container {
-              max-width: 600px;
-              margin: 0 auto;
-              background-color: #ffffff;
-              padding: 20px;
-              border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            h2 {
-              color: #2c3e50;
-              border-bottom: 2px solid #FFD700;
-              padding-bottom: 10px;
-            }
-            .info-row {
-              display: flex;
-              padding: 10px 0;
-              border-bottom: 1px solid #eee;
-            }
-            .label {
-              font-weight: bold;
-              width: 150px;
-              color: #666;
-            }
-            .value {
-              flex: 1;
-              color: #333;
-            }
-            .confirmed-yes {
-              color: #28a745;
-              font-weight: bold;
-            }
-            .confirmed-no {
-              color: #dc3545;
-              font-weight: bold;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h2>📋 Nova Confirmação de Presença Recebida</h2>
-            
-            <div class="info-row">
-              <div class="label">Nome:</div>
-              <div class="value">${name}</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="label">E-mail:</div>
-              <div class="value">${email}</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="label">Empresa:</div>
-              <div class="value">${company}</div>
-            </div>
-            
-            <div class="info-row">
-              <div class="label">Status:</div>
-              <div class="value ${confirmed ? 'confirmed-yes' : 'confirmed-no'}">
-                ${confirmed ? '✅ Presença Confirmada' : '❌ Não Confirmado'}
-              </div>
-            </div>
-            
-            <div class="info-row">
-              <div class="label">Data/Hora:</div>
-              <div class="value">${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</div>
+  const msg = {
+    to: process.env.ADMIN_EMAIL, // Endereço de e-mail do administrador
+    from: process.env.SENDGRID_FROM_EMAIL || 'your_verified_sender@yourdomain.com', // O remetente DEVE ser um endereço verificado no SendGrid
+    subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
+    html: `
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 10px;
+          }
+          .info-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+          }
+          .label {
+            font-weight: bold;
+            width: 150px;
+            color: #666;
+          }
+          .value {
+            flex: 1;
+            color: #333;
+          }
+          .confirmed-yes {
+            color: #28a745;
+            font-weight: bold;
+          }
+          .confirmed-no {
+            color: #dc3545;
+            font-weight: bold;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h2>📋 Nova Confirmação de Presença Recebida</h2>
+          
+          <div class="info-row">
+            <div class="label">Nome:</div>
+            <div class="value">${name}</div>
+          </div>
+          
+          <div class="info-row">
+            <div class="label">E-mail:</div>
+            <div class="value">${email}</div>
+          </div>
+          
+          <div class="info-row">
+            <div class="label">Empresa:</div>
+            <div class="value">${company}</div>
+          </div>
+          
+          <div class="info-row">
+            <div class="label">Status:</div>
+            <div class="value ${confirmed ? 'confirmed-yes' : 'confirmed-no'}">
+              ${confirmed ? '✅ Presença Confirmada' : '❌ Não Confirmado'}
             </div>
           </div>
-        </body>
-        </html>
-      `,
-    });
+          
+          <div class="info-row">
+            <div class="label">Data/Hora:</div>
+            <div class="value">${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  };
+
+  try {
+    await sgMail.send(msg);
     console.log('E-mail de alerta enviado para administrador');
     return true;
   } catch (error) {
-    console.error('Erro ao enviar alerta:', error);
+    console.error('Erro ao enviar alerta via SendGrid:', error);
+    if (error.response) {
+      console.error('Body:', error.response.body);
+      console.error('Headers:', error.response.headers);
+    }
     return false;
   }
 };
@@ -297,13 +315,13 @@ export default async function handler(req, res) {
     alert: false
   };
 
-  if (process.env.RESEND_API_KEY) {
+  if (process.env.SENDGRID_API_KEY) {
     if (confirmed) {
       emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
     }
     emailsSent.alert = await sendAlertEmail(sanitizedName, sanitizedEmail, sanitizedCompany, !!confirmed);
   } else {
-    console.warn('⚠️ RESEND_API_KEY não configurada - e-mails não serão enviados');
+    console.warn('⚠️ SENDGRID_API_KEY não configurada - e-mails não serão enviados');
   }
 
   res.status(200).json({
