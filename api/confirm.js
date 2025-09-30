@@ -1,4 +1,4 @@
-// pages/api/confirm.js (exemplo para API Routes do Pages Router)
+// pages/api/confirm.js
 // Lembre-se de instalar: npm install @sendgrid/mail
 import sgMail from '@sendgrid/mail';
 
@@ -11,14 +11,21 @@ if (process.env.SENDGRID_API_KEY) {
 
 // Função para enviar e-mail para o convidado (HTML estilizado)
 const sendConfirmationEmail = async (to, name) => {
+  const VERIFIED_SENDER = process.env.SENDGRID_FROM_EMAIL;
+
   if (!process.env.SENDGRID_API_KEY) {
     console.warn('SENDGRID_API_KEY não configurada - e-mail de confirmação não será enviado');
     return false;
   }
 
+  if (!VERIFIED_SENDER) {
+    console.error('ERRO CRÍTICO: A variável de ambiente SENDGRID_FROM_EMAIL não está configurada. O e-mail não pode ser enviado.');
+    return false;
+  }
+
   const msg = {
     to, // Endereço de e-mail do destinatário
-    from: process.env.SENDGRID_FROM_EMAIL || 'your_verified_sender@yourdomain.com', // O remetente DEVE ser um endereço verificado no SendGrid
+    from: VERIFIED_SENDER, // O remetente DEVE ser um endereço verificado no SendGrid
     subject: 'Confirmação de Presença - Open House Swiss Park',
     html: `
       <!DOCTYPE html>
@@ -148,7 +155,6 @@ const sendConfirmationEmail = async (to, name) => {
     return true;
   } catch (error) {
     console.error('Erro ao enviar e-mail de confirmação via SendGrid:', error);
-    // O SendGrid pode retornar detalhes específicos no error.response
     if (error.response) {
       console.error('Body:', error.response.body);
       console.error('Headers:', error.response.headers);
@@ -159,14 +165,22 @@ const sendConfirmationEmail = async (to, name) => {
 
 // Função para enviar alerta para o organizador
 const sendAlertEmail = async (name, email, company, confirmed) => {
-  if (!process.env.SENDGRID_API_KEY || !process.env.ADMIN_EMAIL) {
+  const VERIFIED_SENDER = process.env.SENDGRID_FROM_EMAIL;
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+
+  if (!process.env.SENDGRID_API_KEY || !ADMIN_EMAIL) {
     console.warn('SENDGRID_API_KEY ou ADMIN_EMAIL não configurados - alerta não será enviado');
     return false;
   }
 
+  if (!VERIFIED_SENDER) {
+    console.error('ERRO CRÍTICO: A variável de ambiente SENDGRID_FROM_EMAIL não está configurada. O e-mail de alerta não pode ser enviado.');
+    return false;
+  }
+
   const msg = {
-    to: process.env.ADMIN_EMAIL, // Endereço de e-mail do administrador
-    from: process.env.SENDGRID_FROM_EMAIL || 'your_verified_sender@yourdomain.com', // O remetente DEVE ser um endereço verificado no SendGrid
+    to: ADMIN_EMAIL, // Endereço de e-mail do administrador
+    from: VERIFIED_SENDER, // O remetente DEVE ser um endereço verificado no SendGrid
     subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
     html: `
       <!DOCTYPE html>
@@ -315,13 +329,13 @@ export default async function handler(req, res) {
     alert: false
   };
 
-  if (process.env.SENDGRID_API_KEY) {
+  if (process.env.SENDGRID_API_KEY && process.env.SENDGRID_FROM_EMAIL) {
     if (confirmed) {
       emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
     }
     emailsSent.alert = await sendAlertEmail(sanitizedName, sanitizedEmail, sanitizedCompany, !!confirmed);
   } else {
-    console.warn('⚠️ SENDGRID_API_KEY não configurada - e-mails não serão enviados');
+    console.warn('⚠️ SENDGRID_API_KEY ou SENDGRID_FROM_EMAIL não configurada - e-mails não serão enviados');
   }
 
   res.status(200).json({
