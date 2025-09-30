@@ -11,7 +11,7 @@ const sendConfirmationEmail = async (to, name) => {
 
   try {
     await resend.emails.send({
-      from: 'contatousbabc@gmail.com',
+      from: 'onboarding@resend.dev',
       to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
