@@ -11,7 +11,7 @@ const sendConfirmationEmail = async (to, name) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     await resend.emails.send({
-      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
+      from: 'onboarding@resend.dev', // Para produção, use um domínio verificado.
       to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
@@ -35,8 +35,7 @@ const sendConfirmationEmail = async (to, name) => {
               box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             .header {
-              className="bg-black bg-opacity-50 p-6 rounded-lg shadow-lg"
-
+              background-color: #1a1a1a;
               padding: 30px;
               text-align: center;
               color: white;
@@ -57,7 +56,7 @@ const sendConfirmationEmail = async (to, name) => {
               margin-bottom: 20px;
             }
             .event-details {
-              background-color: #000000;
+              background-color: #f9f9f9;
               border-left: 4px solid #FFD700;
               padding: 20px;
               margin: 20px 0;
@@ -155,7 +154,7 @@ const sendAlertEmail = async (name, email, company, confirmed) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     await resend.emails.send({
-      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
+      from: 'onboarding@resend.dev', // Para produção, use um domínio verificado.
       to: process.env.ADMIN_EMAIL,
       subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
       html: `
@@ -276,18 +275,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Nome, e-mail e empresa são obrigatórios' });
   }
 
-  // Validar formato do e-mail
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Por favor, insira um e-mail válido' });
   }
 
-  // Sanitizar inputs
   const sanitizedName = name.trim().substring(0, 100);
   const sanitizedEmail = email.trim().toLowerCase().substring(0, 100);
   const sanitizedCompany = company.trim().substring(0, 100);
 
-  // Log da confirmação (sempre funciona, mesmo sem configuração de email)
   console.log('Nova confirmação recebida:', {
     name: sanitizedName,
     email: sanitizedEmail,
@@ -296,23 +292,20 @@ export default async function handler(req, res) {
     timestamp: new Date().toISOString()
   });
 
-  // Tentar enviar e-mails (não bloqueia se falhar)
   const emailsSent = {
     confirmation: false,
     alert: false
   };
 
   if (process.env.RESEND_API_KEY) {
-    emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
+    if (confirmed) {
+      emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
+    }
     emailsSent.alert = await sendAlertEmail(sanitizedName, sanitizedEmail, sanitizedCompany, !!confirmed);
   } else {
     console.warn('⚠️ RESEND_API_KEY não configurada - e-mails não serão enviados');
-    console.log('Para habilitar o envio de e-mails:');
-    console.log('1. Crie uma conta em https://resend.com');
-    console.log('2. Configure as variáveis de ambiente RESEND_API_KEY e ADMIN_EMAIL');
   }
 
-  // Sempre retornar sucesso para o usuário (mesmo que o e-mail falhe)
   res.status(200).json({
     message: 'Confirmação registrada com sucesso!',
     name: sanitizedName,
