@@ -1,17 +1,17 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // Função para enviar e-mail para o convidado (HTML estilizado)
 const sendConfirmationEmail = async (to, name) => {
   if (!process.env.RESEND_API_KEY) {
-    console.error('Chave de API do Resend não configurada');
-    return;
+    console.warn('RESEND_API_KEY não configurada - e-mail de confirmação não será enviado');
+    return false;
   }
 
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
       to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
@@ -35,7 +35,8 @@ const sendConfirmationEmail = async (to, name) => {
               box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             .header {
-              background: linear-gradient(135deg, #FFD700, #FFA500);
+              className="bg-black bg-opacity-50 p-6 rounded-lg shadow-lg"
+
               padding: 30px;
               text-align: center;
               color: white;
@@ -56,7 +57,7 @@ const sendConfirmationEmail = async (to, name) => {
               margin-bottom: 20px;
             }
             .event-details {
-              background-color: #f8f9fa;
+              background-color: #000000;
               border-left: 4px solid #FFD700;
               padding: 20px;
               margin: 20px 0;
@@ -136,45 +137,141 @@ const sendConfirmationEmail = async (to, name) => {
       `,
     });
     console.log('E-mail de confirmação enviado para:', to);
+    return true;
   } catch (error) {
-    console.error('Erro ao enviar e-mail:', error);
+    console.error('Erro ao enviar e-mail de confirmação:', error);
+    return false;
   }
 };
 
 // Função para enviar alerta para o organizador
 const sendAlertEmail = async (name, email, company, confirmed) => {
-  if (!process.env.RESEND_API_KEY) {
-    console.error('Chave de API do Resend não configurada');
-    return;
+  if (!process.env.RESEND_API_KEY || !process.env.ADMIN_EMAIL) {
+    console.warn('RESEND_API_KEY ou ADMIN_EMAIL não configurados - alerta não será enviado');
+    return false;
   }
 
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
       to: process.env.ADMIN_EMAIL,
-      subject: '🚨 Nova Confirmação de Presença',
+      subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
       html: `
-        <h2>Novo convidado confirmou presença:</h2>
-        <p><strong>Nome:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Empresa:</strong> ${company}</p>
-        <p><strong>Confirmado:</strong> ${confirmed ? 'Sim' : 'Não'}</p>
-        <p><strong>Data/Hora:</strong> ${new Date().toLocaleString()}</p>
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background-color: #f4f4f4;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              padding: 20px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            h2 {
+              color: #2c3e50;
+              border-bottom: 2px solid #FFD700;
+              padding-bottom: 10px;
+            }
+            .info-row {
+              display: flex;
+              padding: 10px 0;
+              border-bottom: 1px solid #eee;
+            }
+            .label {
+              font-weight: bold;
+              width: 150px;
+              color: #666;
+            }
+            .value {
+              flex: 1;
+              color: #333;
+            }
+            .confirmed-yes {
+              color: #28a745;
+              font-weight: bold;
+            }
+            .confirmed-no {
+              color: #dc3545;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h2>📋 Nova Confirmação de Presença Recebida</h2>
+            
+            <div class="info-row">
+              <div class="label">Nome:</div>
+              <div class="value">${name}</div>
+            </div>
+            
+            <div class="info-row">
+              <div class="label">E-mail:</div>
+              <div class="value">${email}</div>
+            </div>
+            
+            <div class="info-row">
+              <div class="label">Empresa:</div>
+              <div class="value">${company}</div>
+            </div>
+            
+            <div class="info-row">
+              <div class="label">Status:</div>
+              <div class="value ${confirmed ? 'confirmed-yes' : 'confirmed-no'}">
+                ${confirmed ? '✅ Presença Confirmada' : '❌ Não Confirmado'}
+              </div>
+            </div>
+            
+            <div class="info-row">
+              <div class="label">Data/Hora:</div>
+              <div class="value">${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</div>
+            </div>
+          </div>
+        </body>
+        </html>
       `,
     });
     console.log('E-mail de alerta enviado para administrador');
+    return true;
   } catch (error) {
     console.error('Erro ao enviar alerta:', error);
+    return false;
   }
 };
 
 export default async function handler(req, res) {
+  // Habilitar CORS
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
   const { name, email, company, confirmed } = req.body;
 
+  // Validações
   if (!name || !email || !company) {
     return res.status(400).json({ error: 'Nome, e-mail e empresa são obrigatórios' });
   }
@@ -185,15 +282,43 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Por favor, insira um e-mail válido' });
   }
 
-  // Enviar e-mails
-  await sendConfirmationEmail(email, name);
-  await sendAlertEmail(name, email, company, confirmed);
+  // Sanitizar inputs
+  const sanitizedName = name.trim().substring(0, 100);
+  const sanitizedEmail = email.trim().toLowerCase().substring(0, 100);
+  const sanitizedCompany = company.trim().substring(0, 100);
 
+  // Log da confirmação (sempre funciona, mesmo sem configuração de email)
+  console.log('Nova confirmação recebida:', {
+    name: sanitizedName,
+    email: sanitizedEmail,
+    company: sanitizedCompany,
+    confirmed: !!confirmed,
+    timestamp: new Date().toISOString()
+  });
+
+  // Tentar enviar e-mails (não bloqueia se falhar)
+  const emailsSent = {
+    confirmation: false,
+    alert: false
+  };
+
+  if (process.env.RESEND_API_KEY) {
+    emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
+    emailsSent.alert = await sendAlertEmail(sanitizedName, sanitizedEmail, sanitizedCompany, !!confirmed);
+  } else {
+    console.warn('⚠️ RESEND_API_KEY não configurada - e-mails não serão enviados');
+    console.log('Para habilitar o envio de e-mails:');
+    console.log('1. Crie uma conta em https://resend.com');
+    console.log('2. Configure as variáveis de ambiente RESEND_API_KEY e ADMIN_EMAIL');
+  }
+
+  // Sempre retornar sucesso para o usuário (mesmo que o e-mail falhe)
   res.status(200).json({
     message: 'Confirmação registrada com sucesso!',
-    name,
-    email,
-    company,
-    confirmed,
+    name: sanitizedName,
+    email: sanitizedEmail,
+    company: sanitizedCompany,
+    confirmed: !!confirmed,
+    emailStatus: emailsSent
   });
 }
