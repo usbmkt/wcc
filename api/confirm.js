@@ -10,9 +10,9 @@ const sendConfirmationEmail = async (to, name) => {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
-    const result = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: to,
+    await resend.emails.send({
+      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
+      to,
       subject: 'Confirmação de Presença - Open House Swiss Park',
       html: `
         <!DOCTYPE html>
@@ -35,7 +35,7 @@ const sendConfirmationEmail = async (to, name) => {
               box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
             .header {
-              background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+              background: linear-gradient(135deg, #FFD700, #FFA500);
               padding: 30px;
               text-align: center;
               color: white;
@@ -65,9 +65,6 @@ const sendConfirmationEmail = async (to, name) => {
               color: #2c3e50;
               margin-top: 0;
             }
-            .event-details p {
-              margin: 10px 0;
-            }
             .footer {
               background-color: #2c3e50;
               color: white;
@@ -87,22 +84,6 @@ const sendConfirmationEmail = async (to, name) => {
               border-radius: 25px;
               display: inline-block;
               margin: 20px 0;
-              font-weight: bold;
-            }
-            ul {
-              list-style-type: none;
-              padding-left: 0;
-            }
-            ul li {
-              padding: 8px 0;
-              padding-left: 25px;
-              position: relative;
-            }
-            ul li:before {
-              content: "✓";
-              position: absolute;
-              left: 0;
-              color: #28a745;
               font-weight: bold;
             }
           </style>
@@ -127,7 +108,7 @@ const sendConfirmationEmail = async (to, name) => {
                 <h3>📅 Detalhes do Evento</h3>
                 <p><strong>Data:</strong> 6 de novembro de 2024</p>
                 <p><strong>Horário:</strong> Das 17h às 21h</p>
-                <p><strong>Local:</strong> Swiss Park - Avenida Omar Daibert, nº 1, Parque Terra Nova II</p>
+                <p><strong>Local:</strong> Swiss Park</p>
                 <p><strong>Importante:</strong> Este convite é individual e intransferível</p>
               </div>
               
@@ -154,18 +135,10 @@ const sendConfirmationEmail = async (to, name) => {
         </html>
       `,
     });
-    
-    console.log('✅ E-mail de confirmação enviado com sucesso!');
-    console.log('ID do e-mail:', result.id);
-    console.log('Destinatário:', to);
+    console.log('E-mail de confirmação enviado para:', to);
     return true;
   } catch (error) {
-    console.error('❌ Erro ao enviar e-mail de confirmação:', error);
-    console.error('Detalhes do erro:', {
-      message: error.message,
-      statusCode: error.statusCode,
-      name: error.name
-    });
+    console.error('Erro ao enviar e-mail de confirmação:', error);
     return false;
   }
 };
@@ -180,8 +153,8 @@ const sendAlertEmail = async (name, email, company, confirmed) => {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
-    const result = await resend.emails.send({
-      from: 'onboarding@resend.dev',
+    await resend.emails.send({
+      from: 'onboarding@resend.dev', // Use este domínio padrão até configurar seu domínio verificado
       to: process.env.ADMIN_EMAIL,
       subject: '🚨 Nova Confirmação de Presença - Open House Swiss Park',
       html: `
@@ -268,17 +241,10 @@ const sendAlertEmail = async (name, email, company, confirmed) => {
         </html>
       `,
     });
-    
-    console.log('✅ E-mail de alerta enviado para administrador');
-    console.log('ID do e-mail:', result.id);
+    console.log('E-mail de alerta enviado para administrador');
     return true;
   } catch (error) {
-    console.error('❌ Erro ao enviar alerta:', error);
-    console.error('Detalhes do erro:', {
-      message: error.message,
-      statusCode: error.statusCode,
-      name: error.name
-    });
+    console.error('Erro ao enviar alerta:', error);
     return false;
   }
 };
@@ -320,8 +286,8 @@ export default async function handler(req, res) {
   const sanitizedEmail = email.trim().toLowerCase().substring(0, 100);
   const sanitizedCompany = company.trim().substring(0, 100);
 
-  // Log da confirmação
-  console.log('📝 Nova confirmação recebida:', {
+  // Log da confirmação (sempre funciona, mesmo sem configuração de email)
+  console.log('Nova confirmação recebida:', {
     name: sanitizedName,
     email: sanitizedEmail,
     company: sanitizedCompany,
@@ -329,39 +295,23 @@ export default async function handler(req, res) {
     timestamp: new Date().toISOString()
   });
 
-  // Verificar se as variáveis de ambiente estão configuradas
-  if (!process.env.RESEND_API_KEY) {
-    console.error('⚠️ RESEND_API_KEY não configurada!');
-    console.log('📌 Para configurar:');
-    console.log('1. Acesse https://resend.com e crie uma conta');
-    console.log('2. Gere uma API Key');
-    console.log('3. No Vercel, vá em Settings > Environment Variables');
-    console.log('4. Adicione: RESEND_API_KEY = sua_chave_aqui');
-    console.log('5. Adicione: ADMIN_EMAIL = seu_email@exemplo.com');
-    console.log('6. Faça um novo deploy');
-  }
-
-  // Tentar enviar e-mails
+  // Tentar enviar e-mails (não bloqueia se falhar)
   const emailsSent = {
     confirmation: false,
     alert: false
   };
 
   if (process.env.RESEND_API_KEY) {
-    console.log('📧 Tentando enviar e-mails...');
-    
-    // Enviar e-mail de confirmação para o convidado
     emailsSent.confirmation = await sendConfirmationEmail(sanitizedEmail, sanitizedName);
-    
-    // Enviar alerta para o administrador
     emailsSent.alert = await sendAlertEmail(sanitizedName, sanitizedEmail, sanitizedCompany, !!confirmed);
-    
-    console.log('📊 Status dos e-mails:', emailsSent);
   } else {
-    console.warn('⚠️ E-mails não enviados - RESEND_API_KEY não configurada');
+    console.warn('⚠️ RESEND_API_KEY não configurada - e-mails não serão enviados');
+    console.log('Para habilitar o envio de e-mails:');
+    console.log('1. Crie uma conta em https://resend.com');
+    console.log('2. Configure as variáveis de ambiente RESEND_API_KEY e ADMIN_EMAIL');
   }
 
-  // Sempre retornar sucesso para o usuário
+  // Sempre retornar sucesso para o usuário (mesmo que o e-mail falhe)
   res.status(200).json({
     message: 'Confirmação registrada com sucesso!',
     name: sanitizedName,
