@@ -47,16 +47,13 @@ const HomePage = () => {
           />
           <p className="text-sm text-white font-medium">NEGÓCIOS IMOBILIÁRIOS</p>
           <div className="mt-10 flex space-x-10">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/wellimoveiss/" target="_blank" rel="noopener noreferrer">
               <FaInstagram className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/61560477314114" target="_blank" rel="noopener noreferrer">
               <FaFacebook className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              <FaTwitter className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
-            </a>
-            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/5511981321448" target="_blank" rel="noopener noreferrer">
               <FaWhatsapp className="text-white text-xl hover:text-yellow-500 transition cursor-pointer" />
             </a>
           </div>
