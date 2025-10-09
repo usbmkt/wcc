@@ -107,7 +107,7 @@ const sendConfirmationEmail = async (to, name) => {
               
               <div class="event-details">
                 <h3>📅 Detalhes do Evento</h3>
-                <p><strong>Data:</strong> 6 de novembro de 2024</p>
+                <p><strong>Data:</strong> 11 de dezembro de 2025</p>
                 <p><strong>Horário:</strong> Das 17h às 21h</p>
                 <p><strong>Local:</strong> Swiss Park</p>
                 <p><strong>Importante:</strong> Este convite é individual e intransferível</p>
