@@ -118,7 +118,7 @@ const HomePage = () => {
               </div>
             </div>
             <div className="border-t border-white pt-4">
-              <p className="text-xl font-bold">6 de novembro das 17 às 21h</p>
+              <p className="text-xl font-bold">11 de dezembro de 2025</p>
               <p className="mt-2 text-sm">
                 O evento será realizado no Condomínio Swiss Park na  Avenida Omar Daibert, nº 1, no bairro Parque Terra Nova II
               </p>
